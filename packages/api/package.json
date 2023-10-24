@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon --inspect --trace-warnings ./src/index.js",
     "start": "node src/index.js",
+    "build": "yarn run build",
     "test": "jest --env=node",
     "test:ci:all": "jest --env=node",
     "test:watch": "jest --watch",

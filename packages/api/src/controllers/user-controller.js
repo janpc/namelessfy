@@ -1,6 +1,7 @@
 const { USER_COLLECTION, CommonStaticRepository } = require("../repositories");
 const { handleResponse } = require("../utils/utils");
 const { uploadImageToCloudinary } = require("../utils/cloudinary");
+const { log } = require("loglevel");
 
 async function signUp(req, res, next) {
   const { uid, email } = req.user;
@@ -69,15 +70,20 @@ async function edit(req, res, next) {
 
   delete dataToUpdate._id;
   delete dataToUpdate.firebase_id;
-
-  if (req.file) {
-    const result = await uploadImageToCloudinary(
-      req.file.path,
-      req.body._id,
-      "porfileImages",
-    );
-    dataToUpdate.porfileImage = result.url;
+  try {
+    if (req.file) {
+      const result = await uploadImageToCloudinary(
+        req.file.path,
+        req.body._id,
+        "porfileImages",
+      );
+      dataToUpdate.porfileImage = result.url;
+    }
+  } catch (e) {
+    console.log(e);
+    next(e);
   }
+  
 
   const updateFields = Object.keys(dataToUpdate);
 
